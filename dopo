@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Decálogo Prehospitalario - 10 Pasos Clave</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #2c3e50;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .book-container {
+            width: 1024px;
+            height: 700px;
+            background: #ecf0f1;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pages-area {
+            flex: 1;
+            position: relative;
+            background: #fef9e7;
+            background-image: linear-gradient(90deg, rgba(0,0,0,0.02) 1px, transparent 1px);
+            background-size: 20px 100%;
+        }
+
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            overflow-y: auto;
+            display: none;
+            background: #fef9e7;
+            box-shadow: inset 0 0 30px rgba(0,0,0,0.03);
+            transition: transform 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+            animation: pageAppear 0.5s ease;
+        }
+
+        .page.turning {
+            display: block;
+            position: absolute;
+            animation: pageTurn 0.6s ease;
+        }
+
+        @keyframes pageAppear {
+            from { opacity: 0.5; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pageTurn {
+            0% { transform: rotateY(0deg); opacity: 1; }
+            50% { transform: rotateY(-20deg); opacity: 0.8; }
+            100% { transform: rotateY(0deg); opacity: 1; }
+        }
+
+        .nav-bar {
+            background: #c0392b;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            border-top: 3px solid #f1c40f;
+        }
+
+        .page-indicator {
+            background: #34495e;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .nav-button {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .nav-button:hover {
+            background: white;
+            color: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #c0392b;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0 #f1c40f;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #2980b9;
+            border-left: 8px solid #c0392b;
+            padding-left: 20px;
+            margin: 30px 0 20px;
+        }
+
+        h3 {
+            font-size: 2em;
+            color: #2c3e50;
+            margin: 20px 0 10px;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-left: 10px solid #c0392b;
+        }
+
+        .step-header {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .step-number {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #c0392b;
+            min-width: 80px;
+            text-align: center;
+            text-shadow: 2px 2px 0 #f1c40f;
+        }
+
+        .step-title {
+            font-size: 2.2em;
+            color: #2980b9;
+        }
+
+        .step-explanation {
+            font-size: 1.2em;
+            line-height: 1.6;
+            color: #2c3e50;
+            margin: 15px 0;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 10px;
+        }
+
+        .step-example {
+            background: #f1c40f20;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #f1c40f;
+            margin-top: 15px;
+        }
+
+        .portada {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .portada h1 {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .portada .subtitle {
+            font-size: 2em;
+            color: #2980b9;
+            margin: 20px 0;
+        }
+
+        .medical-icon {
+            font-size: 6em;
+            margin: 30px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .med-icon {
+            text-align: center;
+            font-size: 2.5em;
+            background: white;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .color-code {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .code-item {
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .red { background: #c0392b; }
+        .yellow { background: #f39c12; }
+        .green { background: #27ae60; }
+        .black { background: #2c3e50; }
+
+        .page::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .page::-webkit-scrollbar-track {
+            background: #ecf0f1;
+        }
+
+        .page::-webkit-scrollbar-thumb {
+            background: #c0392b;
+            border-radius: 5px;
+        }
+
+        @media (max-width: 1024px) {
+            .book-container {
+                width: 100%;
+                height: 90vh;
+            }
+            
+            .step-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .icon-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="book-container">
+        <div class="pages-area" id="pagesArea">
+            <!-- PORTADA -->
+            <div class="page active" id="page1">
+                <div class="portada">
+                    <div class="medical-icon">🚑</div>
+                    <h1>DECÁLOGO<br>PREHOSPITALARIO</h1>
+                    <div class="subtitle">10 Pasos Clave en la Asistencia Sanitaria</div>
+                    
+                    <div style="margin: 40px 0; background: #c0392b20; padding: 30px; border-radius: 30px;">
+                        <h3 style="color: #c0392b;">🏥 NACIMIENTO 2000 OMG</h3>
+                        <p style="font-size: 1.4em; margin-top: 15px;">
+                            <strong>Organización Médica Global</strong><br>
+                            Protocolo estandarizado de actuación<br>
+                            para servicios de emergencias
+                        </p>
+                    </div>
+
+                    <div class="icon-grid">
+                        <div class="med-icon">📞</div>
+                        <div class="med-icon">🚨</div>
+                        <div class="med-icon">🛡️</div>
+                        <div class="med-icon">📋</div>
+                        <div class="med-icon">🫀</div>
+                        <div class="med-icon">⚕️</div>
+                        <div class="med-icon">🏥</div>
+                        <div class="med-icon">🚑</div>
+                        <div class="med-icon">📊</div>
+                        <div class="med-icon">🔄</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ÍNDICE/PASO 0 -->
+            <div class="page" id="page2">
+                <h2>📋 Los 10 Pasos Prehospitalarios</h2>
+                
+                <div style="background: #c0392b10; padding: 25px; border-radius: 20px; margin: 30px 0;">
+                    <p style="font-size: 1.3em;">Secuencia cronológica de actuación desde que se recibe el aviso hasta que el equipo queda listo para una nueva emergencia.</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin: 30px 0;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>1. Alerta</strong> 📞<br>Recepción del aviso
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>2. Alarma</strong> 🚨<br>Activación de recursos
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>3. Aproximación</strong> 🛡️<br>Llegada segura
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>4. Aislamiento</strong> ⚠️<br>Control de zona
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>5. Triaje</strong> 📋<br>Clasificación
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>6. SVB/SVA</strong> 🫀<br>Soporte vital
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>7. Estabilización</strong> ⚕️<br>Preparación para traslado
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>8. Transporte</strong> 🚑<br>Traslado asistido
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>9. Transferencia</strong> 🏥<br>Entrega en hospital
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #c0392b;">
+                        <strong>10. Reactivación</strong> 🔄<br>Listos para nueva salida
+                    </div>
+                </div>
+
+                <div class="color-code">
+                    <div class="code-item red">ROJO - Crítico</div>
+                    <div class="code-item yellow">AMARILLO - Urgente</div>
+                    <div class="code-item green">VERDE - Leve</div>
+                    <div class="code-item black">NEGRO - Fallecido</div>
+                </div>
+            </div>
+
+            <!-- PASO 1: ALERTA -->
+            <div class="page" id="page3">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">1</div>
+                        <div class="step-title">ALERTA</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>📞 Explicación:</strong> Se recibe el aviso de emergencia (112/911). El teleoperador recoge datos clave para movilizar los recursos adecuados.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Datos esenciales:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>📍 Ubicación exacta</li>
+                            <li>🚨 Tipo de emergencia</li>
+                            <li>👥 Número de víctimas</li>
+                            <li>📞 Teléfono de contacto</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Accidente de tráfico en km 15 de la autovía, 2 vehículos implicados, personas atrapadas"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 2: ALARMA -->
+            <div class="page" id="page4">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">2</div>
+                        <div class="step-title">ALARMA</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🚨 Explicación:</strong> Se activan los recursos necesarios según la información recibida: ambulancia, bomberos, policía, etc.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Recursos movilizables:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>🚑 Ambulancia de soporte vital básico</li>
+                            <li>🏥 Ambulancia de soporte vital avanzado (UVI móvil)</li>
+                            <li>🔥 Bomberos (rescate, incendios)</li>
+                            <li>👮 Fuerzas de seguridad</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Se moviliza UVI móvil + bomberos por posibles atrapados"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 3: APROXIMACIÓN -->
+            <div class="page" id="page5">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">3</div>
+                        <div class="step-title">APROXIMACIÓN</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🛡️ Explicación:</strong> Llegada al lugar evaluando riesgos antes de posicionarse. Seguridad vial, estructural, química, etc.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Evaluación inicial:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>🚗 Tráfico y visibilidad</li>
+                            <li>🔥 Incendios o humo</li>
+                            <li>⚡ Cables eléctricos</li>
+                            <li>🧪 Materiales peligrosos</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Estacionamos 50m antes en sentido contrario, chalecos reflectantes, señalización"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 4: AISLAMIENTO Y CONTROL -->
+            <div class="page" id="page6">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">4</div>
+                        <div class="step-title">AISLAMIENTO Y CONTROL</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>⚠️ Explicación:</strong> Se acordona la zona, se controlan los peligros activos y se crea un perímetro seguro.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Zonas de actuación:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>🔴 Zona caliente (solo acceso con EPI)</li>
+                            <li>🟡 Zona templada (puesto de mando)</li>
+                            <li>🟢 Zona fría (área segura)</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Bomberos estabilizan vehículos, se corta la carretera, se aleja a curiosos"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 5: TRIAJE -->
+            <div class="page" id="page7">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">5</div>
+                        <div class="step-title">TRIAJE</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>📋 Explicación:</strong> Clasificación de víctimas por gravedad para priorizar la atención cuando hay múltiples heridos.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <div style="display: grid; gap: 10px;">
+                            <div style="background: #c0392b20; padding: 10px; border-radius: 5px;"><span style="color: #c0392b; font-weight: bold;">🔴 ROJO</span> - Muy grave, atención inmediata</div>
+                            <div style="background: #f39c1220; padding: 10px; border-radius: 5px;"><span style="color: #f39c12; font-weight: bold;">🟡 AMARILLO</span> - Grave, puede esperar</div>
+                            <div style="background: #27ae6020; padding: 10px; border-radius: 5px;"><span style="color: #27ae60; font-weight: bold;">🟢 VERDE</span> - Leve, atención diferida</div>
+                            <div style="background: #2c3e5020; padding: 10px; border-radius: 5px;"><span style="color: #2c3e50; font-weight: bold;">⚫ NEGRO</span> - Fallecido/expectante</div>
+                        </div>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Se colocan tarjetas de colores a cada víctima según prioridad"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 6: SVB Y SVA -->
+            <div class="page" id="page8">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">6</div>
+                        <div class="step-title">SVB / SVA</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🫀 Explicación:</strong> Aplicación de Soporte Vital Básico (SVB) o Avanzado (SVA) según la necesidad de cada paciente.
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                        <div style="background: #2980b920; padding: 15px; border-radius: 10px;">
+                            <strong>SVB (Básico):</strong>
+                            <ul>
+                                <li>RCP básica</li>
+                                <li>Vendajes</li>
+                                <li>Inmovilizaciones</li>
+                            </ul>
+                        </div>
+                        <div style="background: #c0392b20; padding: 15px; border-radius: 10px;">
+                            <strong>SVA (Avanzado):</strong>
+                            <ul>
+                                <li>Intubación</li>
+                                <li>Medicación IV</li>
+                                <li>Desfibrilación</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Paciente rojo en parada, se inicia RCP avanzada con intubación y adrenalina"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 7: ESTABILIZACIÓN -->
+            <div class="page" id="page9">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">7</div>
+                        <div class="step-title">ESTABILIZACIÓN</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>⚕️ Explicación:</strong> Se estabiliza al paciente en el lugar antes del traslado: control de hemorragias, fijación de fracturas, etc.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Objetivos:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>✅ Constantes vitales estables</li>
+                            <li>✅ Vía aérea asegurada</li>
+                            <li>✅ Accesos venosos</li>
+                            <li>✅ Inmovilización completa</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Se coloca collarín cervical, férulas y se monitoriza antes de mover"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 8: TRANSPORTE -->
+            <div class="page" id="page10">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">8</div>
+                        <div class="step-title">TRANSPORTE</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🚑 Explicación:</strong> Traslado al hospital adecuado manteniendo la atención continua durante el trayecto.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Criterios de destino:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>🏥 Centro con capacidad adecuada</li>
+                            <li>⏱️ Tiempo de traslado óptimo</li>
+                            <li>🩺 Recursos disponibles en ruta</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Politraumatizado a hospital con neurocirugía, avisando previamente"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 9: TRANSFERENCIA -->
+            <div class="page" id="page11">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">9</div>
+                        <div class="step-title">TRANSFERENCIA</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🏥 Explicación:</strong> Entrega del paciente al equipo hospitalario con un informe claro y detallado.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Informe estructurado (SBAR):</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li><strong>S</strong> Situación: qué pasó</li>
+                            <li><strong>B</strong> Background: antecedentes</li>
+                            <li><strong>A</strong> Assessment: evaluación</li>
+                            <li><strong>R</strong> Recommendation: recomendación</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Varón 45a, IAM, se administró AAS y nitroglicerina, estable durante traslado"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PASO 10: REACTIVACIÓN -->
+            <div class="page" id="page12">
+                <div class="step-card">
+                    <div class="step-header">
+                        <div class="step-number">10</div>
+                        <div class="step-title">REACTIVACIÓN</div>
+                    </div>
+                    <div class="step-explanation">
+                        <strong>🔄 Explicación:</strong> El equipo se reabastece, limpia material y queda listo para una nueva emergencia.
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 15px;">
+                        <p><strong>Proceso:</strong></p>
+                        <ul style="margin-left: 30px; font-size: 1.1em;">
+                            <li>🧹 Limpieza y desinfección</li>
+                            <li>📦 Reposición de material</li>
+                            <li>📝 Cumplimentación de informes</li>
+                            <li>⛽ Repostar combustible</li>
+                        </ul>
+                    </div>
+                    <div class="step-example">
+                        ⭐ Ejemplo: "Ambulancia revisada y repostada, listos para siguiente servicio en 15 min"
+                    </div>
+                </div>
+            </div>
+
+            <!-- PÁGINA FINAL: RESUMEN -->
+            <div class="page" id="page13">
+                <h2>📌 CICLO COMPLETO DE EMERGENCIA</h2>
+                
+                <div style="background: #c0392b; color: white; padding: 30px; border-radius: 30px; text-align: center; margin: 30px 0;">
+                    <div style="font-size: 3em;">🔄</div>
+                    <p style="font-size: 1.5em; margin: 20px 0;">DE LA ALERTA A LA REACTIVACIÓN</p>
+                    <p>Un proceso continuo para garantizar la mejor atención</p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2,1fr); gap: 15px;">
+                    <div style="background: #2980b9; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        1. Alerta 📞
+                    </div>
+                    <div style="background: #2980b9; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        2. Alarma 🚨
+                    </div>
+                    <div style="background: #2980b9; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        3. Aproximación 🛡️
+                    </div>
+                    <div style="background: #2980b9; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        4. Aislamiento ⚠️
+                    </div>
+                    <div style="background: #e67e22; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        5. Triaje 📋
+                    </div>
+                    <div style="background: #e67e22; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        6. SVB/SVA 🫀
+                    </div>
+                    <div style="background: #27ae60; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        7. Estabilización ⚕️
+                    </div>
+                    <div style="background: #27ae60; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        8. Transporte 🚑
+                    </div>
+                    <div style="background: #8e44ad; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        9. Transferencia 🏥
+                    </div>
+                    <div style="background: #8e44ad; color: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        10. Reactivación 🔄
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 40px;">
+                    <p style="font-size: 1.2em; background: #f1c40f; padding: 20px; border-radius: 50px;">
+                        ⚕️ NACIMIENTO 2000 OMG - Organización Médica Global
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-bar">
+            <button class="nav-button" id="prevBtn" onclick="changePage(-1)">←</button>
+            <div class="page-indicator" id="pageIndicator">Página 1/13</div>
+            <button class="nav-button" id="nextBtn" onclick="changePage(1)">→</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 13;
+
+        function showPage(pageNumber) {
+            for(let i = 1; i <= totalPages; i++) {
+                const page = document.getElementById(`page${i}`);
+                if(page) {
+                    page.classList.remove('active');
+                    page.classList.remove('turning');
+                }
+            }
+            
+            const activePage = document.getElementById(`page${pageNumber}`);
+            if(activePage) {
+                activePage.classList.add('active');
+                activePage.classList.add('turning');
+                
+                setTimeout(() => {
+                    activePage.classList.remove('turning');
+                }, 500);
+            }
+            
+            document.getElementById('pageIndicator').textContent = `Página ${pageNumber}/${totalPages}`;
+            
+            document.getElementById('prevBtn').disabled = pageNumber === 1;
+            document.getElementById('nextBtn').disabled = pageNumber === totalPages;
+        }
+
+        function changePage(direction) {
+            const newPage = currentPage + direction;
+            if(newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                showPage(currentPage);
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowLeft') {
+                changePage(-1);
+            } else if(e.key === 'ArrowRight') {
+                changePage(1);
+            }
+        });
+
+        showPage(1);
+    </script>
+</body>
+</html>
